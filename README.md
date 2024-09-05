@@ -1,39 +1,50 @@
-## Set up the work enviroment
+# Work enviroment setup
 
-Back-end:
+## Back-end:
 
-1- Install Git
+#### 1- Install Git
 
-2- Install Python
+#### 2- Install Python 3.12
 
-3- Install VS Code
+#### 3- Install VS Code
 
-Optional Add-Ons:
+> **Recommended VS Code Add-Ons:**
+>
+> - GitLens
+> - Git Graph
 
-- GitLens
-- Git Graph
+#### 4- Clone de git repository
+```
+git clone https://github.com/anthonyariasr/Carpooling-App-Backend.git
+```
 
-4- Clone de git repository
+#### 5- Open the project folder
 
-5- cd project
+#### 6- Create virtual enviroment
 
-6- Create virtual enviroment using |
-
-```jsx
+```
 python -m venv env
 ```
 
-7-  activate venv using 
+#### 7-  activate venv using 
 
-```jsx
+*Windows*:
+```
 . env/Scripts/activate
 ```
 
-8- Once is activate install the libraries from requierements.txt using 
-
-```jsx
-pip install -r requirements.txt 
+*Linux / macOS*:
+```
+source env/bin/activate
 ```
 
+#### 8- Once is activate install the libraries from requierements.txt using 
 
-test
+```
+pip install -r requirements.txt 
+```
+#### 9- To check if everything is running fine execute
+```
+python run.py
+```
+> if everything is running fine it should display "hello":"world" on port 8000
