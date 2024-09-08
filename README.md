@@ -1,3 +1,8 @@
+![FastAPI](https://img.shields.io/badge/Framework-FastAPI-blue) ![Python](https://img.shields.io/badge/Language-Python-blue) ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-blue)
+
+
+
+
 # Work enviroment setup
 
 ## Back-end:
