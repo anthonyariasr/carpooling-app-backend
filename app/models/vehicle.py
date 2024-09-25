@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from base import Base
 
 class Vehicle(Base):
     __tablename__ = 'vehicle'
@@ -11,4 +11,12 @@ class Vehicle(Base):
     description = Column(String, nullable=True)
 
     owner_id = Column(ForeignKey('user.id'))
-    owner = relationship("User", "vehicles")
+    owner = relationship("User", back_populates="vehicles")
+
+    vehicle_type_id = Column(ForeignKey('vehicle_type.id'))
+    vehicle_type = relationship('VehicleType', back_populates="vehicles")
+   
+    brand_id = Column(ForeignKey('brand.id'))
+    brand = relationship('Brand', back_populates="vehicles")
+
+    trips = relationship('Trip', back_populates = 'vehicle')

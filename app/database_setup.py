@@ -1,166 +1,116 @@
-#Ultima modificacion: 9/23/24 12:20 am
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, Column, Integer, String, DateTime, Boolean, Date, Table
-
-# URL de conexión para PostgreSQL
-DATABASE_URL = 'postgresql+psycopg2://postgres:123@localhost:5432/proyectoAP'
-
-# Crear el motor de base de datos
-engine = create_engine(DATABASE_URL, echo=True)
-
-# Crear una fábrica de sesiones
-Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-session = Session()
-
-Base = declarative_base()
-
-trip_passengers = Table(
-    'trip_passengers', Base.metadata, 
-    Column('trip_id', ForeignKey('trip.id'), primary_key=True),
-    Column('user_id', ForeignKey('user.id'), primary_key=True),
-    Column('pickup_stop_id', ForeignKey('stop.id'))
-)
-class User(Base):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    first_name = Column(String)
-    second_name = Column(String, nullable=True)
-    first_surname = Column(String)
-    second_surname = Column(String)
-
-    identification = Column(Integer, index=True)
-    birth_date = Column(Date)
-    institutional_email = Column(String, index = True)
-    phone_number = Column(String)
-    dl_expiration_date = Column(Date)
-
-    gender_id = Column(ForeignKey('gender.id'))
-    gender = relationship('Gender', back_populates="users")
-
-    user_type_id = Column(ForeignKey('user_type.id'))
-    user_type = relationship('UserType', back_populates="users")
-
-    institution_id = Column(ForeignKey('institution.id'))
-    institution = relationship('Institution', back_populates="users")
-    
-    trips_as_driver = relationship('Trip', back_populates="driver")
-
-    vehicles = relationship('Vehicle', back_populates="owner")
-
-    trips_as_passenger = relationship("Trip", secondary=trip_passengers, back_populates="passengers")
-
-class Vehicle(Base):
-    __tablename__ = 'vehicle'
-    id = Column(Integer, primary_key=True)
-    license_plate = Column(String, index=True)
-    year = Column(String)
-    max_capacity = Column(Integer)
-    description = Column(String, nullable=True)
-
-    owner_id = Column(ForeignKey('user.id'))
-    owner = relationship("User", back_populates="vehicles")
-
-    vehicle_type_id = Column(ForeignKey('vehicle_type.id'))
-    vehicle_type = relationship('VehicleType', back_populates="vehicles")
-   
-    brand_id = Column(ForeignKey('brand.id'))
-    brand = relationship('Brand', back_populates="vehicles")
-
-    trips = relationship('Trip', back_populates = 'vehicle')
-
-class VehicleType(Base):
-    __tablename__ = 'vehicle_type'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-
-    vehicles = relationship('Vehicle', back_populates='vehicle_type')
-
-class Brand(Base):
-    __tablename__  = 'brand'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-
-    vehicles = relationship("Vehicle", back_populates="brand")
-
-
-class UserType(Base):
-    __tablename__ = 'user_type'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-
-    users = relationship('User', back_populates='user_type')
-    
-class Trip(Base):  
-    __tablename__ = 'trip'
-    id = Column(Integer, primary_key=True)
-    passenger_limit = Column(Integer)
-    fare_per_person = Column(Integer)
-    route_url = Column(String)
-    departure_datetime = Column(DateTime)
-
-    driver_id = Column(ForeignKey('user.id'))
-    driver = relationship("User", back_populates="trips_as_driver")
-
-    starting_point_id = Column(Integer, ForeignKey('stop.id'))
-    starting_point = relationship("Stop", foreign_keys=[starting_point_id])
-
-    finishing_point_id = Column(Integer, ForeignKey('stop.id'))
-    finishing_point = relationship("Stop", foreign_keys=[finishing_point_id])
-    
-    trip_status_id = Column(ForeignKey('trip_status.id'))
-    trip_status = relationship('TripStatus', back_populates="trips")
-
-    vehicle_id = Column(ForeignKey('vehicle.id'))
-    vehicle = relationship('Vehicle', back_populates="trips")
-    
-    passengers = relationship("User", secondary=trip_passengers, back_populates="trips_as_passenger")
-    
-class Stop(Base):
-    __tablename__ = 'stop'
-    id = Column(Integer, primary_key=True)
-    latitude = Column(String)
-    longitude = Column(String)
-    name = Column(String)
-    description = Column(String, nullable=True)
-
-class TripStatus(Base):
-    __tablename__ = 'trip_status'
-    id = Column(Integer, primary_key=True)
-    name = Column(Integer)
-    description = Column(String)
-
-    trips = relationship("Trip", back_populates="trip_status")
-
-
-class Institution(Base):
-    __tablename__ = 'institution'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    description = Column(String)
-    address = Column(String)
-
-    users = relationship("User", back_populates = "institution")
-
-class Gender(Base):
-    __tablename__ = 'gender'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    description = Column(String)
-
-    users = relationship('User', back_populates = 'gender')
-
-
-Base.metadata.create_all(bind=engine)
-
+from datetime import date, datetime
+from database import *
 
 # Ejemplo de inserción de datos
 
-new_brand = Brand(name="Toyota")
-session.add(new_brand)
+# 1. Agregar marcas de vehículos
+brands = [Brand(name=name) for name in ["Toyota", "Honda", "Chevrolet", "Ford", "Nissan", "Mazda", "Hyundai", "Kia", "Volkswagen", "Subaru"]]
+session.add_all(brands)
 session.commit()
 
-print(new_brand.id  + " : " + new_brand.name)
-print("Todo bien")
+# 2. Agregar tipos de vehículos
+vehicle_types = [VehicleType(name=name) for name in ["Sedan", "SUV", "Pickup", "Van", "Coupe", "Hatchback", "Convertible", "Wagon"]]
+session.add_all(vehicle_types)
+session.commit()
+
+# 3. Agregar tipos de usuario
+user_types = [UserType(name=name) for name in ["Base-User", "Super-Admin", "Institution-Admin"]]
+session.add_all(user_types)
+session.commit()
+
+# 4. Agregar estados de viaje
+trip_statuses = [
+    TripStatus(name="Active", description="The trip is currently active"),
+    TripStatus(name="Completed", description="The trip has been completed"),
+    TripStatus(name="Cancelled", description="The trip has been cancelled"),
+    TripStatus(name="Pending", description="The trip is pending"),
+    TripStatus(name="Scheduled", description="The trip is scheduled for the future")
+]
+session.add_all(trip_statuses)
+session.commit()
+
+# 5. Agregar géneros
+genders = [Gender(name=name, description="") for name in ["Male", "Female", "Other"]]
+session.add_all(genders)
+session.commit()
+
+# 6. Agregar instituciones
+institutions = [
+    Institution(name="Instituto Tecnológico de Costa Rica", description="Institución de educación superior", address="Cartago, Costa Rica"),
+    Institution(name="Universidad de Costa Rica", description="Universidad pública", address="San José, Costa Rica"),
+    Institution(name="Universidad Nacional", description="Universidad pública", address="Heredia, Costa Rica"),
+    Institution(name="Universidad Latina", description="Universidad privada", address="San José, Costa Rica"),
+]
+session.add_all(institutions)
+session.commit()
+
+# 7. Agregar usuarios
+users = []
+for i in range(1, 21):
+    user = User(
+        first_name=f'User{i}',
+        first_surname='Surname',
+        second_surname='Surname',
+        identification=123456789 + i,
+        birth_date=date(1995 + (i % 5), (i % 12) + 1, (i % 28) + 1),
+        institutional_email=f'user{i}@example.com',
+        phone_number=f'12345{i}',
+        dl_expiration_date=date(2025 + (i % 5), (i % 12) + 1, (i % 28) + 1),
+        gender_id=genders[i % len(genders)].id,
+        user_type_id=user_types[i % len(user_types)].id,
+        institution_id=institutions[i % len(institutions)].id
+    )
+    users.append(user)
+
+session.add_all(users)
+session.commit()
+
+# 8. Agregar vehículos
+vehicles = []
+for i in range(1, 21):
+    vehicle = Vehicle(
+        license_plate=f'ABC{i:03d}',
+        year=str(2010 + (i % 10)),
+        max_capacity=5 + (i % 3),
+        description='Sedan' if i % 2 == 0 else 'SUV',
+        owner_id=users[i % len(users)].id,
+        vehicle_type_id=vehicle_types[i % len(vehicle_types)].id,
+        brand_id=brands[i % len(brands)].id
+    )
+    vehicles.append(vehicle)
+
+session.add_all(vehicles)
+session.commit()
+
+# 9. Agregar paradas
+stops = [
+    Stop(latitude='9.9357', longitude='-84.0518', name='Cartago', description='Parada en Cartago'),
+    Stop(latitude='9.9333', longitude='-84.0833', name='San José', description='Parada en San José'),
+    Stop(latitude='9.9275', longitude='-84.0454', name='Heredia', description='Parada en Heredia'),
+    Stop(latitude='9.9333', longitude='-84.1250', name='Alajuela', description='Parada en Alajuela'),
+    Stop(latitude='9.9285', longitude='-84.0554', name='Liberia', description='Parada en Liberia'),
+]
+session.add_all(stops)
+session.commit()
+
+# 10. Agregar viajes
+trips = []
+for i in range(1, 21):
+    trip = Trip(
+        passenger_limit=4 + (i % 3),
+        fare_per_person=1000 + (i * 100),
+        route_url='https://goo.gl/maps/123456',
+        departure_datetime=datetime(2024, 9, 25, 12 + (i % 12), 30),
+        driver_id=users[i % len(users)].id,
+        starting_point_id=stops[i % len(stops)].id,
+        finishing_point_id=stops[(i + 1) % len(stops)].id,
+        trip_status_id=trip_statuses[i % len(trip_statuses)].id,
+        vehicle_id=vehicles[i % len(vehicles)].id
+    )
+    trips.append(trip)
+
+session.add_all(trips)
+session.commit()
+
+print("Base de datos poblada con datos de prueba.")
+

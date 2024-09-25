@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from database import Base
+from base import Base
 
 class Gender(Base):
     __tablename__ = 'gender'
@@ -8,4 +8,4 @@ class Gender(Base):
     name = Column(String)
     description = Column(String)
 
-    users = relationship('User', 'gender')
+    users = relationship('User', back_populates = 'gender')

@@ -1,7 +1,8 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean, Date
 from sqlalchemy.orm import relationship
-from database import Base
+from base import Base
 
+from .trip_passengers import trip_passengers
 class User(Base):
     __tablename__ = 'user'
 
@@ -12,10 +13,10 @@ class User(Base):
     second_surname = Column(String)
 
     identification = Column(Integer, index=True)
-    birth_date = Column(DateTime)
+    birth_date = Column(Date)
     institutional_email = Column(String, index = True)
     phone_number = Column(String)
-    dl_expiration_date = Column(DateTime)
+    dl_expiration_date = Column(Date)
 
     gender_id = Column(ForeignKey('gender.id'))
     gender = relationship('Gender', back_populates="users")
@@ -29,3 +30,5 @@ class User(Base):
     trips_as_driver = relationship('Trip', back_populates="driver")
 
     vehicles = relationship('Vehicle', back_populates="owner")
+
+    trips_as_passenger = relationship("Trip", secondary=lambda: trip_passengers, back_populates="passengers")

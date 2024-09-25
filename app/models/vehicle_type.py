@@ -2,9 +2,9 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from base import Base
 
-class UserType(Base):
-    __tablename__ = 'user_type'
+class VehicleType(Base):
+    __tablename__ = 'vehicle_type'
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    users = relationship('User', back_populates='user_type')
+    vehicles = relationship('Vehicle', back_populates='vehicle_type')
