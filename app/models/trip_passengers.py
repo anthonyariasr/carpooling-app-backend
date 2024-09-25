@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, ForeignKey
-from base import Base
+from app.base import Base
 
 trip_passengers = Table(
     'trip_passengers', Base.metadata, 

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from base import Base
+from app.base import Base
 
 class UserType(Base):
     __tablename__ = 'user_type'

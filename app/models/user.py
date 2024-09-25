@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean, Date
 from sqlalchemy.orm import relationship
-from base import Base
+from app.base import Base
 
 from .trip_passengers import trip_passengers
 class User(Base):
