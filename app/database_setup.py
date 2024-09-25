@@ -61,7 +61,7 @@ class Vehicle(Base):
     description = Column(String, nullable=True)
 
     owner_id = Column(ForeignKey('user.id'))
-    owner = relationship("User", "vehicles")
+    owner = relationship("User", back_populates="vehicles")
 
     vehicle_type_id = Column(ForeignKey('vehicle_type.id'))
     vehicle_type = relationship('VehicleType', back_populates="vehicles")
@@ -69,7 +69,7 @@ class Vehicle(Base):
     brand_id = Column(ForeignKey('brand.id'))
     brand = relationship('Brand', back_populates="vehicles")
 
-    trips = relationship('Trip', 'vehicle')
+    trips = relationship('Trip', back_populates = 'vehicle')
 
 class VehicleType(Base):
     __tablename__ = 'vehicle_type'
@@ -156,4 +156,11 @@ class Gender(Base):
 Base.metadata.create_all(bind=engine)
 
 
+# Ejemplo de inserción de datos
+
+new_brand = Brand(name="Toyota")
+session.add(new_brand)
+session.commit()
+
+print(new_brand.id  + " : " + new_brand.name)
 print("Todo bien")
