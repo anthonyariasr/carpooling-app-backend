@@ -76,21 +76,22 @@ class VehicleType(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    vehicles = relationship('Vehicle', 'vehicle_type')
+    vehicles = relationship('Vehicle', back_populates='vehicle_type')
 
 class Brand(Base):
     __tablename__  = 'brand'
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    vehicles = relationship("Vehicle", "brand")
+    vehicles = relationship("Vehicle", back_populates="brand")
+
 
 class UserType(Base):
     __tablename__ = 'user_type'
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    users = relationship('User', 'user_type')
+    users = relationship('User', back_populates='user_type')
     
 class Trip(Base):  
     __tablename__ = 'trip'
@@ -153,5 +154,6 @@ class Gender(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
 
 print("Todo bien")

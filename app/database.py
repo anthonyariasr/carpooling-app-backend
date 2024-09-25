@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+from app.database_setup import Brand
+
 # URL de conexión para PostgreSQL
 DATABASE_URL = 'postgresql+psycopg2://postgres:123@localhost:5432/proyectoAP'
 
@@ -19,3 +21,11 @@ Base = declarative_base()
 Base.metadata.create_all(bind=engine)
 
 print("Todo bien")
+
+
+new_brand = Brand(name="Toyota")
+
+session.add(new_brand)
+
+session.commit()
+
