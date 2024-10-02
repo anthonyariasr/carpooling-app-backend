@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from database import *
+from app.database import *
 
 # Ejemplo de inserción de datos
 
