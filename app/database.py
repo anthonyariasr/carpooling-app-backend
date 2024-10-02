@@ -26,5 +26,3 @@ Base.metadata.create_all(bind=engine)
 # Crear una fábrica de sesiones
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 session = Session()
-
-print("Todo bien")
