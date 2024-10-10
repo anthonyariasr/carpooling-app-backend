@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean, Date
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean, Date, CheckConstraint, DECIMAL
 from sqlalchemy.orm import relationship
 from app.base import Base
 
@@ -17,6 +17,8 @@ class User(Base):
     institutional_email = Column(String, index = True)
     phone_number = Column(String)
     dl_expiration_date = Column(Date)
+    date_registered = Column(Date)
+    rating = Column(DECIMAL, CheckConstraint('rating >= 1.0 AND rating <= 5.0'))
 
     gender_id = Column(ForeignKey('gender.id'))
     gender = relationship('Gender', back_populates="users")

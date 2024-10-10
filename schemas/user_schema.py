@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, conint
 from typing import Optional
-
+from datetime import date
+from decimal import Decimal
 class UserCreate(BaseModel):
     name: str
     lastname: str
@@ -14,7 +15,9 @@ class UserCreate(BaseModel):
     gender_id: int
     user_type_id: int
     institution_id: int
-
+    date_registered: date
+    rating: Decimal 
+    
 class UserResponse(BaseModel):
     id: int
     name: str
@@ -29,6 +32,8 @@ class UserResponse(BaseModel):
     gender_id: int
     user_type_id: int
     institution_id: int
+    date_registered: date
+    rating: Decimal 
 
     class Config:
         orm_mode = True
