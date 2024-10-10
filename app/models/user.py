@@ -19,6 +19,7 @@ class User(Base):
     dl_expiration_date = Column(Date)
     date_registered = Column(Date)
     rating = Column(DECIMAL, CheckConstraint('rating >= 1.0 AND rating <= 5.0'))
+    total_ratings = Column(Integer)
 
     gender_id = Column(ForeignKey('gender.id'))
     gender = relationship('Gender', back_populates="users")

@@ -17,7 +17,8 @@ class UserCreate(BaseModel):
     institution_id: int
     date_registered: date
     rating: Decimal 
-    
+    total_ratings: int
+
 class UserResponse(BaseModel):
     id: int
     name: str
@@ -34,6 +35,7 @@ class UserResponse(BaseModel):
     institution_id: int
     date_registered: date
     rating: Decimal 
+    total_ratings: int
 
     class Config:
         orm_mode = True
