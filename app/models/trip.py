@@ -26,4 +26,4 @@ class Trip(Base):
     vehicle_id = Column(ForeignKey('vehicle.id'))
     vehicle = relationship('Vehicle', back_populates="trips")
     
-    passengers = relationship("User", secondary=lambda: trip_passengers, back_populates="trips_as_passenger")
+    passengers = relationship("User", secondary= "trip_passengers", back_populates="trips_as_passenger")

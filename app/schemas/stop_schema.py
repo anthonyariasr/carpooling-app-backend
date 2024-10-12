@@ -15,4 +15,8 @@ class StopResponse(BaseModel):
     description: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class StopBasicInfo(BaseModel):
+    id: int
+    name: str

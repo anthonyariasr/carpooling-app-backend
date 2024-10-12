@@ -38,4 +38,9 @@ class UserResponse(BaseModel):
     total_ratings: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class UserBasicInfo(BaseModel):
+    id: int
+    name: str
+    rating: Optional[Decimal] = None

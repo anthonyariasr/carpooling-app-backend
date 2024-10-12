@@ -9,6 +9,8 @@ class TripStatusResponse(BaseModel):
     id: int
     name: str
     description: Optional[str]
-
     class Config:
-        orm_mode = True
+        from_attributes = True
+class TripStatusBasicInfo(BaseModel):
+    id: int
+    name: str

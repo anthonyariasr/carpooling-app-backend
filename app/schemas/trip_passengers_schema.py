@@ -12,4 +12,4 @@ class TripPassengerResponse(BaseModel):
     pickup_stop_id: Optional[int]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

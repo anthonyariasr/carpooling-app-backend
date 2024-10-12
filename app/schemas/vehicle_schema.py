@@ -21,4 +21,9 @@ class VehicleResponse(BaseModel):
     brand_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class VehicleBasicInfo(BaseModel):
+    id: int
+    license_plate: str
+    brand: str

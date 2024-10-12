@@ -13,4 +13,9 @@ class InstitutionResponse(BaseModel):
     address: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class InstitutionBasicInfo(BaseModel):
+    id: int
+    name: str
+    acronym: str

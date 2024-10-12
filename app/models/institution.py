@@ -8,5 +8,6 @@ class Institution(Base):
     name = Column(String)
     description = Column(String)
     address = Column(String)
+    acronym = Column(String)
 
     users = relationship("User", back_populates = "institution")

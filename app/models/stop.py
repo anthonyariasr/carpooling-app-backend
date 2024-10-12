@@ -7,5 +7,5 @@ class Stop(Base):
     id = Column(Integer, primary_key=True)
     latitude = Column(String)
     longitude = Column(String)
-    name = Column(String)
+    name = Column(String, index=True)
     description = Column(String, nullable=True)

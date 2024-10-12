@@ -34,4 +34,4 @@ class User(Base):
 
     vehicles = relationship('Vehicle', back_populates="owner")
 
-    trips_as_passenger = relationship("Trip", secondary=lambda: trip_passengers, back_populates="passengers")
+    trips_as_passenger = relationship("Trip", secondary= "trip_passengers", back_populates="passengers")

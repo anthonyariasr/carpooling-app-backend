@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import random
 from app.database import *
 
 # Ejemplo de inserción de datos
@@ -30,16 +31,16 @@ session.add_all(trip_statuses)
 session.commit()
 
 # 5. Agregar géneros
-genders = [Gender(name=name, description="") for name in ["Male", "Female", "Other"]]
+genders = [Gender(name=name) for name in ["Male", "Female", "Other"]]
 session.add_all(genders)
 session.commit()
 
 # 6. Agregar instituciones
 institutions = [
-    Institution(name="Instituto Tecnológico de Costa Rica", description="Institución de educación superior", address="Cartago, Costa Rica"),
-    Institution(name="Universidad de Costa Rica", description="Universidad pública", address="San José, Costa Rica"),
-    Institution(name="Universidad Nacional", description="Universidad pública", address="Heredia, Costa Rica"),
-    Institution(name="Universidad Latina", description="Universidad privada", address="San José, Costa Rica"),
+    Institution(name="Instituto Tecnológico de Costa Rica", description="Institución de educación superior", address="Cartago, Costa Rica", acronym="TEC"),
+    Institution(name="Universidad de Costa Rica", description="Universidad pública", address="San José, Costa Rica", acronym="UCR"),
+    Institution(name="Universidad Nacional", description="Universidad pública", address="Heredia, Costa Rica", acronym="UNA"),
+    Institution(name="ULACIT", description="Universidad privada", address="San José, Costa Rica", acronym="ULACIT"),
 ]
 session.add_all(institutions)
 session.commit()
@@ -112,5 +113,24 @@ for i in range(1, 21):
 session.add_all(trips)
 session.commit()
 
-print("Base de datos poblada con datos de prueba.")
+
+# 11. Agregar pasajeros a los viajes
+trip_passengers_list = []
+for trip in trips:
+    # Seleccionar un número aleatorio de pasajeros para cada viaje, 
+    # garantizando que no haya duplicados y que no exceda el límite de pasajeros.
+    num_passengers = min(trip.passenger_limit, len(users))
+    passengers = random.sample(users, num_passengers)  # Selecciona pasajeros aleatorios
+
+    for passenger in passengers:
+        trip_passenger_entry = {
+            'trip_id': trip.id,
+            'user_id': passenger.id,
+            'pickup_stop_id': stops[i % len(stops)].id  # Puedes seleccionar una parada de forma lógica
+        }
+        trip_passengers_list.append(trip_passenger_entry)
+
+# Insertar múltiples registros en la tabla de asociación
+session.execute(trip_passengers.insert(), trip_passengers_list)
+session.commit()
 

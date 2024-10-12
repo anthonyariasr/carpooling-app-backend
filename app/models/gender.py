@@ -6,6 +6,5 @@ class Gender(Base):
     __tablename__ = 'gender'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    description = Column(String)
 
     users = relationship('User', back_populates = 'gender')
