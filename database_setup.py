@@ -21,11 +21,11 @@ session.commit()
 
 # 4. Agregar estados de viaje
 trip_statuses = [
-    TripStatus(name="Active", description="The trip is currently active"),
-    TripStatus(name="Completed", description="The trip has been completed"),
-    TripStatus(name="Cancelled", description="The trip has been cancelled"),
-    TripStatus(name="Pending", description="The trip is pending"),
-    TripStatus(name="Scheduled", description="The trip is scheduled for the future")
+    TripStatus(name="Active"),
+    TripStatus(name="Completed"),
+    TripStatus(name="Cancelled"),
+    TripStatus(name="Pending"),
+    TripStatus(name="Scheduled")
 ]
 session.add_all(trip_statuses)
 session.commit()

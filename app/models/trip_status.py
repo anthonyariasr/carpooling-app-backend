@@ -6,6 +6,4 @@ class TripStatus(Base):
     __tablename__ = 'trip_status'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    description = Column(String)
-
     trips = relationship("Trip", back_populates="trip_status")

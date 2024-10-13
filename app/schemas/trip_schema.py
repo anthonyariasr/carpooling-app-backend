@@ -4,7 +4,7 @@ from datetime import date, datetime, time
 
 from app.schemas.institution_schema import InstitutionBasicInfo
 from app.schemas.stop_schema import StopBasicInfo
-from app.schemas.trip_status_schema import TripStatusBasicInfo
+from app.schemas.trip_status_schema import TripStatusResponse
 from app.schemas.user_schema import UserBasicInfo
 from app.schemas.vehicle_schema import VehicleBasicInfo
 class TripCreate(BaseModel):
@@ -28,7 +28,7 @@ class TripResponse(BaseModel):
     driver: UserBasicInfo
     starting_point: StopBasicInfo
     finishing_point: StopBasicInfo
-    trip_status: TripStatusBasicInfo
+    trip_status: TripStatusResponse
     vehicle: VehicleBasicInfo
     institution: InstitutionBasicInfo
 
