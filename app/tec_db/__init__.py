@@ -1,0 +1,1 @@
+from .tec_db import validate_user_tec, setup_tec_db

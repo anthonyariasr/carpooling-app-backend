@@ -1,6 +1,7 @@
 from datetime import date, datetime
 import random
 from app.database import *
+from app.tec_db import setup_tec_db
 
 # Ejemplo de inserción de datos
 
@@ -133,4 +134,9 @@ for trip in trips:
 # Insertar múltiples registros en la tabla de asociación
 session.execute(trip_passengers.insert(), trip_passengers_list)
 session.commit()
+
+print("Base de Datos poblada con éxito")
+
+setup_tec_db()
+
 
