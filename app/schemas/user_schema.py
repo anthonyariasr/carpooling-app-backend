@@ -9,7 +9,7 @@ from app.schemas.user_type_schema import UserTypeResponse
 class UserCreate(BaseModel):
     first_name: str
     first_surname: str
-    identification: str
+    identification: int
     second_name: Optional[str] = None
     second_surname: Optional[str] = None
     institutional_email: EmailStr #forma de validar un correo que tiene pydantic
