@@ -10,11 +10,19 @@ from app.schemas.vehicle_schema import VehicleBasicInfo
 class TripCreate(BaseModel):
     passenger_limit: int
     fare_per_person: int
-    route_url: str
+    route_url: Optional[str] = None
     departure_datetime: datetime
     driver_id: int
-    starting_point_id: int
-    finishing_point_id: int
+    starting_point_name: str
+    starting_point_latitude: Optional[str] = None
+    starting_point_longitude: Optional[str] = None
+    starting_point_description: Optional[str] = None
+
+    finishing_point_name: str
+    finishing_point_latitude: Optional[str] = None
+    finishing_point_longitude: Optional[str] = None
+    finishing_point_description: Optional[str] = None
+
     trip_status_id: int
     vehicle_id: int
 

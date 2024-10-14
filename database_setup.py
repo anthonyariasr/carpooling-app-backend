@@ -60,7 +60,10 @@ for i in range(1, 21):
         dl_expiration_date=date(2025 + (i % 5), (i % 12) + 1, (i % 28) + 1),
         gender_id=genders[i % len(genders)].id,
         user_type_id=user_types[i % len(user_types)].id,
-        institution_id=institutions[i % len(institutions)].id
+        institution_id=institutions[i % len(institutions)].id,
+        date_registered=date(2025 + (i % 5), (i % 12) + 1, (i % 28) + 1),
+        rating=5,
+        total_ratings=100
     )
     users.append(user)
 

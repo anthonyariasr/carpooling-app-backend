@@ -2,17 +2,17 @@ from pydantic import BaseModel
 from typing import Optional
 
 class StopCreate(BaseModel):
-    latitude: str
-    longitude: str
+    latitude: Optional[str] = None
+    longitude: Optional[str] = None
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
 
 class StopResponse(BaseModel):
     id: int
-    latitude: str
-    longitude: str
+    latitude: Optional[str] = None
+    longitude: Optional[str] = None
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
 
     class Config:
         from_attributes = True
