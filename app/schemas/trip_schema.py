@@ -29,6 +29,7 @@ class TripCreate(BaseModel):
 class TripResponse(BaseModel):
     id: int
     passenger_limit: int
+    passenger_count: int
     fare_per_person: float
     route_url: Optional[str]
     departure_date: date

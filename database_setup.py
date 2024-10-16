@@ -117,14 +117,19 @@ for i in range(1, 21):
 session.add_all(trips)
 session.commit()
 
-
-# 11. Agregar pasajeros a los viajes
+# 11. Agregar pasajeros a los viajes y calcular el current_passengers
 trip_passengers_list = []
 for trip in trips:
-    # Seleccionar un número aleatorio de pasajeros para cada viaje, 
-    # garantizando que no haya duplicados y que no exceda el límite de pasajeros.
-    num_passengers = min(trip.passenger_limit, len(users))
-    passengers = random.sample(users, num_passengers)  # Selecciona pasajeros aleatorios
+    # Determinar si el viaje estará lleno o no, usando un 70% no llenos y 30% llenos
+    is_full = random.random() < 0.30  # 30% de probabilidad de que el viaje esté lleno
+
+    if is_full:
+        num_passengers = trip.passenger_limit  # El viaje está lleno
+    else:
+        # El viaje no está lleno, asignamos un número aleatorio de pasajeros entre 1 y el límite
+        num_passengers = random.randint(1, trip.passenger_limit - 1)
+    
+    passengers = random.sample(users, num_passengers)  # Seleccionar pasajeros aleatorios
 
     for passenger in passengers:
         trip_passenger_entry = {
@@ -134,12 +139,14 @@ for trip in trips:
         }
         trip_passengers_list.append(trip_passenger_entry)
 
+
 # Insertar múltiples registros en la tabla de asociación
 session.execute(trip_passengers.insert(), trip_passengers_list)
+session.commit()
+
+# Actualizar los valores de current_passengers en la base de datos
 session.commit()
 
 print("Base de Datos poblada con éxito")
 
 setup_tec_db()
-
-

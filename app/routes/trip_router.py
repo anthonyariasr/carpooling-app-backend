@@ -13,6 +13,7 @@ def prepare_trip(trip: Trip):
     return {
         "id": trip.id,
         "passenger_limit": trip.passenger_limit,
+        "passenger_count": len(trip.passengers),
         "fare_per_person": trip.fare_per_person,
         "route_url": trip.route_url,
         "departure_date": trip.departure_datetime.date(),
