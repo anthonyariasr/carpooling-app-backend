@@ -10,4 +10,4 @@ class Institution(Base):
     address = Column(String)
     acronym = Column(String)
 
-    users = relationship("User", back_populates = "institution")
+    users = relationship("User", back_populates = "institution", cascade="all, delete-orphan")
