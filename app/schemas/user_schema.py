@@ -46,3 +46,11 @@ class UserBasicInfo(BaseModel):
     id: int
     name: str
     rating: Optional[Decimal] = None
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class LoginResponse(BaseModel):
+    message: str
+    user_id: int

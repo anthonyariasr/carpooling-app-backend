@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.database import *
 from app.schemas import *
 from app.models import*
+from app.schemas.user_schema import UserLogin, LoginResponse
+from app.tec_db import validate_user_tec  # Importa la función para validar el usuario en la base de datos tec
 
 user_router = APIRouter()
 
@@ -75,7 +77,7 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     
     return prepare_user(user)
 
-# Obtener el numero de trips como driver de un user
+# Obtener el numero de trips como driver de un user http://127.0.0.1:8000/users/users/2/driver-trips
 @user_router.get("/users/{user_id}/driver-trips")
 def get_driver_trips_count(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -107,6 +109,18 @@ def get_vehicles_by_user(user_id: int, db: Session = Depends(get_db)):
     
     return formatted_vehicles
 
+# Login con email y contrasenna. esta leyendo la base que no es
+@user_router.post("/users/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
+def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == user_login.email).first()
+    
+    # Si no se encuentra el usuario o la contraseña es incorrecta
+    if not user or user.password != user_login.password:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Retornar el mensaje y el correo del usuario
+    return {"message": "Login successful", "user_email": user.email}
+
 # Registrar un nuevo usuario
 @user_router.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -124,13 +138,11 @@ def register_license_expiration(user_id: int, expiration_date: date, db: Session
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Actualiza la fecha de expiración de la licencia
     user.dl_expiration_date = expiration_date
     
-    # Guarda los cambios en la base de datos
     db.commit()
     
-    return {"message": "License expiration date updated successfully"}
+    return {"message": "License expiration date updated successfully", "user_id": user.id, "expiration date": expiration_date}
 
 # Eliminar un usuario por ID
 @user_router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
