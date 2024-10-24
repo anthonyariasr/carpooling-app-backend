@@ -30,3 +30,11 @@ class VehicleBasicInfo(BaseModel):
     id: int
     license_plate: str
     brand: str
+
+class VehicleUpdate(BaseModel):
+    license_plate: Optional[str] = None
+    year: Optional[str] = None
+    description: Optional[str] = None
+    brand_id: Optional[int] = None
+    vehicle_type_id: Optional[int] = None
+    max_capacity: Optional[int] = None

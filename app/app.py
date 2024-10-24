@@ -20,6 +20,8 @@ app.include_router(brand_router, prefix="/brands")
 app.include_router(gender_router, prefix="/genders")
 app.include_router(institution_router, prefix="/institutions")
 app.include_router(user_router, prefix="/users")
+app.include_router(vehicle_router, prefix="/vehicles")
+
 
 @app.get("/")
 def is_running():
