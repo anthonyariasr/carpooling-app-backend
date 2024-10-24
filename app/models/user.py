@@ -14,7 +14,7 @@ class User(Base):
 
     identification = Column(Integer, index=True)
     birth_date = Column(Date)
-    institutional_email = Column(String, index = True)
+    institutional_email = Column(String, index = True, unique=True)
     phone_number = Column(String)
     dl_expiration_date = Column(Date)
     date_registered = Column(Date)
