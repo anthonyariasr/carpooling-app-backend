@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session, aliased
+from fastapi.middleware.cors import CORSMiddleware
 from app.database import *
 from app.schemas import *
 
@@ -26,3 +27,12 @@ app.include_router(vehicle_router, prefix="/vehicles")
 @app.get("/")
 def is_running():
     return {"running": True}
+
+# Permitir todos los orígenes
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitir todos los orígenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos los métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permitir todos los encabezados
+)
