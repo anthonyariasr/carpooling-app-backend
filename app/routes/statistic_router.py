@@ -129,19 +129,19 @@ def get_new_users_by_institution(institution_id: int, db: Session = Depends(get_
 
 #Top passengers with the most trips by institution 1~3~5~10
 @statistic_router.get("/institution/{institution_id}/top-passengers", status_code=status.HTTP_200_OK)
-def get_top_passengers_by_institution(institution_id: int, top: int = Query(5, ge=1, le=10), db: Session = Depends(get_db)):
+def get_top_passengers_by_institution(institution_id: int, top: Optional[int] = Query(5, ge=1, le=10), db: Session = Depends(get_db)):
     top_passengers = (
         db.query(
             User.id,
             User.first_name,
             User.first_surname,
-            func.count(trip_passengers.user_id).label("total_of_trips")
+            func.count(trip_passengers.c.user_id).label("total_of_trips")
         )
-        .join(trip_passengers, trip_passengers.user_id == User.id)
-        .join(Trip, Trip.id == trip_passengers.trip_id)
+        .join(trip_passengers, trip_passengers.c.user_id == User.id)
+        .join(Trip, Trip.id == trip_passengers.c.trip_id)
         .filter(User.institution_id == institution_id)
         .group_by(User.id)
-        .order_by(func.count(trip_passengers.user_id).desc())
+        .order_by(func.count(trip_passengers.c.user_id).desc())
         .limit(top)
         .all()
     )
@@ -159,7 +159,7 @@ def get_top_passengers_by_institution(institution_id: int, top: int = Query(5, g
 
 #Top drivers with the most trips by institution 1~3~5~10
 @statistic_router.get("/institution/{institution_id}/top-drivers", status_code=status.HTTP_200_OK)
-def get_top_drivers_by_institution(institution_id: int, top: int = Query(5, ge=1, le=10), db: Session = Depends(get_db)):
+def get_top_drivers_by_institution(institution_id: int, top: Optional[int] = Query(5, ge=1, le=10), db: Session = Depends(get_db)):
     top_drivers = (
         db.query(
             User.id,
@@ -280,7 +280,7 @@ def get_total_institutions(db: Session = Depends(get_db)):
 
 #Top users with the most trips as a driver
 @statistic_router.get("/top-drivers", status_code=status.HTTP_200_OK)
-def get_top_drivers(top: int, db: Session = Depends(get_db)):
+def get_top_drivers(top: Optional[int] = Query(5, ge=1, le=10), db: Session = Depends(get_db)):
     top_drivers = (
         db.query(
             User.id.label("id"),
@@ -312,7 +312,7 @@ def get_top_drivers(top: int, db: Session = Depends(get_db)):
  
 #Top users with the most trips as a passenger
 @statistic_router.get("/top-passengers", status_code=status.HTTP_200_OK)
-def get_top_passengers(top: int = Query(1, gt=0, le=10), db: Session = Depends(get_db)):
+def get_top_passengers(top: int = Query(5, gt=0, le=10), db: Session = Depends(get_db)):
     try:
         result = (
             db.query(
@@ -343,7 +343,7 @@ def get_top_passengers(top: int = Query(1, gt=0, le=10), db: Session = Depends(g
 
 # Top institutions with the most users 1~3~5~10 
 @statistic_router.get("/top-institutions", status_code=status.HTTP_200_OK)
-def get_top_institutions(top: int = Query(1, gt=0, le=10), db: Session = Depends(get_db)):
+def get_top_institutions(top: int = Query(3, gt=0, le=10), db: Session = Depends(get_db)):
     try:
         # Perform the query to obtain the institutions with the most users
         result = (
@@ -423,7 +423,7 @@ def get_trip_gender_percentage(db: Session = Depends(get_db)):
 
 #Completed trips in the last week, month, and year (by institution)
 @statistic_router.get("/completed-trips", status_code=status.HTTP_200_OK)
-def get_completed_trips_by_institution(id_institution: int, db: Session = Depends(get_db)):
+def get_completed_trips_by_institution(db: Session = Depends(get_db)):
     now = datetime.now()
     
     # Calculate dates
@@ -436,19 +436,16 @@ def get_completed_trips_by_institution(id_institution: int, db: Session = Depend
     
     # Queries for counting completed trips by institution and period
     last_week_trips = db.query(func.count(Trip.id)).join(User, Trip.driver_id == User.id).filter(
-        User.institution_id == id_institution,
         Trip.trip_status_id == completed_status_id,
         Trip.departure_datetime >= last_week
     ).scalar()
     
     last_month_trips = db.query(func.count(Trip.id)).join(User, Trip.driver_id == User.id).filter(
-        User.institution_id == id_institution,
         Trip.trip_status_id == completed_status_id,
         Trip.departure_datetime >= last_month
     ).scalar()
     
     last_year_trips = db.query(func.count(Trip.id)).join(User, Trip.driver_id == User.id).filter(
-        User.institution_id == id_institution,
         Trip.trip_status_id == completed_status_id,
         Trip.departure_datetime >= last_year
     ).scalar()
