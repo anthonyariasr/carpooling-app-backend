@@ -14,7 +14,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Crear el motor de base de datos
 # Poner echo=True para ver SQL que sucede en la BD
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=True, pool_size=20, max_overflow=0)
 Base.metadata.create_all(bind=engine)
 
 # Crear una fábrica de sesiones
