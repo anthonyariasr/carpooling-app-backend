@@ -31,7 +31,6 @@ def validate_user_tec (email: str, password: str):
         return True
     return False
 
-
 def setup_tec_db():
     # Lista de 200 nombres únicos
     nombres = [

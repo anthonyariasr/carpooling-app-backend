@@ -16,7 +16,7 @@ class Vehicle(Base):
     vehicle_type_id = Column(ForeignKey('vehicle_type.id'))
     vehicle_type = relationship('VehicleType', back_populates="vehicles")
    
-    brand_id = Column(ForeignKey('brand.id'))
-    brand = relationship('Brand', back_populates="vehicles")
+    brand_id = Column(ForeignKey('brand.id', ondelete='SET NULL'), nullable=True)
+    brand = relationship('Brand', back_populates="vehicles", passive_deletes=True)
 
     trips = relationship('Trip', back_populates = 'vehicle')

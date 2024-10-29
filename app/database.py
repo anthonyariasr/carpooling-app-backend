@@ -22,7 +22,7 @@ DATABASE_URL_SQLITE = 'sqlite:///proyectoAP.db'
 
 # Crear el motor de base de datos
 # Poner echo=True para ver SQL que sucede en la BD
-engine = create_engine(DATABASE_URL_SQLITE, echo=False)
+engine = create_engine(DATABASE_URL_SQLITE, echo=True)
 Base.metadata.create_all(bind=engine)
 
 # Crear una fábrica de sesiones

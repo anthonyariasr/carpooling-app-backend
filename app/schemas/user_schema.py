@@ -42,7 +42,25 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = None
+    first_surname: Optional[str] = None
+    identification: Optional[int] = None
+    second_name: Optional[str] = None
+    second_surname: Optional[str] = None
+    phone_number: Optional[str] = None
+    birth_date: Optional[date] = None
+    gender_id: Optional[int] = None
 class UserBasicInfo(BaseModel):
     id: int
     name: str
     rating: Optional[Decimal] = None
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class LoginResponse(BaseModel):
+    message: str
+    user: UserResponse
+
