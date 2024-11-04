@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 # Leer la variable de entorno DATABASE_URL
-DATABASE_TEC = os.getenv("DATABASE_TEC_SQLITE")
+DATABASE_TEC = os.getenv("DATABASE_TEC")
 
 Base2 = declarative_base()
 
