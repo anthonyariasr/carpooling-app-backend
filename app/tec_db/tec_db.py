@@ -1,7 +1,13 @@
-from sqlalchemy import Column, String, create_engine
+from sqlalchemy import DDL, Column, String, create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
+from dotenv import load_dotenv
+import os
 
-DATABASE_URL_SQLITE = 'sqlite:///tec.db'
+
+load_dotenv()
+
+# Leer la variable de entorno DATABASE_URL
+DATABASE_TEC = os.getenv("DATABASE_TEC")
 
 Base2 = declarative_base()
 
@@ -10,7 +16,7 @@ class User(Base2):
     email = Column(String, primary_key=True)
     password = Column(String)
 
-engine = create_engine(DATABASE_URL_SQLITE, echo=False)
+engine = create_engine(DATABASE_TEC, echo=False)
 Base2.metadata.create_all(bind=engine)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -42,21 +48,7 @@ def setup_tec_db():
         'Ramiro', 'Noelia', 'Sergio', 'Lorena', 'Marcos', 'Esther', 'Rafael', 'Valeria', 'Guillermo', 'Eva',
         'Pablo', 'Ines', 'Esteban', 'Vanessa', 'Salvador', 'Silvia', 'Rodrigo', 'Alicia', 'Nicolas', 'Cristina',
         'Julio', 'Miriam', 'Agustin', 'Rebeca', 'Leandro', 'Teresa', 'Alvaro', 'Olga', 'Bruno', 'Yolanda',
-        'Emilio', 'Sonia', 'Federico', 'Nuria', 'Hugo', 'Tamara', 'Leonardo', 'Belen', 'Joaquin', 'Sara',
-        'Diego', 'Carolina', 'Martín', 'Lourdes', 'Ramón', 'Elisa', 'Vicente', 'Amparo', 'Simón', 'Raquel',
-        'Mateo', 'Daniel', 'Santiago', 'Valentina', 'Alejandro', 'Samantha', 'Emiliano', 'Victoria', 
-        'Camila', 'María', 'Ángel', 'José', 'Martina', 'Álvaro', 'Fernanda', 'Clara', 'Lucas', 'Patricia',
-        'Alberto', 'Gloria', 'Tomás', 'Ximena', 'Pablo', 'Elías', 'Sara', 'Noah', 'Ingrid', 'Álex', 'Emma', 
-        'Eva', 'Rafael', 'Guillermo', 'Bianca', 'Álvaro', 'Isabel', 'Dario', 'Silvia', 'Alina', 'Eduardo',
-        'John', 'Emily', 'Michael', 'Olivia', 'James', 'Sophia', 'William', 'Emma', 'Benjamin', 'Ava',
-        'Lucas', 'Mia', 'Henry', 'Isabella', 'Alexander', 'Amelia', 'Sebastian', 'Evelyn', 'Daniel', 'Harper',
-        'Matthew', 'Ella', 'Joseph', 'Aria', 'David', 'Luna', 'Andrew', 'Camila', 'Samuel', 'Scarlett',
-        'Christopher', 'Aurora', 'Anthony', 'Layla', 'Joshua', 'Chloe', 'Dylan', 'Grace', 'Nathan', 'Zoe',
-        'Ryan', 'Riley', 'Isaac', 'Nora', 'Thomas', 'Hazel', 'Liam', 'Lily', 'Ethan', 'Sophie', 'Mason', 'Violet',
-        'Logan', 'Ellie', 'Jacob', 'Stella', 'Jackson', 'Paisley', 'Caleb', 'Mila', 'Grayson', 'Addison',
-        'Jack', 'Lucy', 'Owen', 'Savannah', 'Gabriel', 'Madeline', 'Carter', 'Victoria', 'Wyatt', 'Brooklyn',
-        'Luke', 'Hannah', 'Jayden', 'Aubrey', 'Levi', 'Bella', 'Julian', 'Samantha', 'Elijah', 'Willow'
-    ]
+        'Emilio', 'Sonia', 'Federico', 'Nuria', 'Hugo', 'Tamara']
 
     # Elimina los nombres duplicados
     nombres = list(set(nombres))
@@ -77,4 +69,10 @@ def setup_tec_db():
             users_tec.append(user_tec)
 
     session.add_all(users_tec)
+    session.commit()
+    print('Usuarios del TEC creados exitosamente')
+
+def delete_all_data_tec():
+    session.query(User).delete()
+    session.commit()
     session.commit()
