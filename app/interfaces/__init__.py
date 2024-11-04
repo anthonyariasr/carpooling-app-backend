@@ -1,2 +1,2 @@
-from .abstract_login_factory import AbstractLoginFactory, CompanyALoginFactory, CompanyBLoginFactory
-from .login_factory import LoginInterface, CompanyALogin, CompanyBLogin
+from .auth_factory import AuthFactory
+from .auth_provider import AuthProvider, TecAuthProvider, Empresa2AuthProvider
