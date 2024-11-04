@@ -5,6 +5,7 @@ class AuthFactory:
     # Define a mapping of email domains to their respective authentication providers
     _providers = {
         'tec.cr': TecAuthProvider,
+        'estudiantec.cr': TecAuthProvider,
         'empresa2.com': Empresa2AuthProvider,
         'example.com': ExampleAuthProvider,
     }

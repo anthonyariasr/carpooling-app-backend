@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 # Leer la variable de entorno DATABASE_URL
-DATABASE_TEC = os.getenv("DATABASE_TEC")
+DATABASE_TEC = os.getenv("DATABASE_TEC_SQLITE")
 
 Base2 = declarative_base()
 
@@ -76,3 +76,9 @@ def delete_all_data_tec():
     session.query(User).delete()
     session.commit()
     session.commit()
+
+def check_existance_tec(email: str):
+    user = session.query(User).filter(User.email == email).first()
+    if user == None:
+        return False
+    return True

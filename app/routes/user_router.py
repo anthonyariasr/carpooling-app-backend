@@ -155,6 +155,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     user_exists = db.query(User).filter(User.institutional_email == user.institutional_email).first()
     if user_exists:
         raise HTTPException(status_code=400, detail="Email already registered")
+    try:
+        # Use the Factory to select the authentication provider
+        auth_provider = AuthFactory.get_auth_provider(user.institutional_email)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    if not auth_provider.check_existance(user.institutional_email):
+        raise HTTPException(status_code=400, detail="Invalid email")
+    
     new_user = User(**user.dict())
     db.add(new_user)
     db.commit()

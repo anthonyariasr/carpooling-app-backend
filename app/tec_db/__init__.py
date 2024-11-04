@@ -1,1 +1,1 @@
-from .tec_db import validate_user_tec, setup_tec_db, delete_all_data_tec
+from .tec_db import validate_user_tec, setup_tec_db, delete_all_data_tec, check_existance_tec

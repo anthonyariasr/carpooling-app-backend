@@ -10,7 +10,7 @@ from app.models import *
 load_dotenv()
 
 # Leer la variable de entorno DATABASE_URL
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL_SQLITE")
 
 # Crear el motor de base de datos
 # Poner echo=True para ver SQL que sucede en la BD
