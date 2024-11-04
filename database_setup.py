@@ -55,7 +55,7 @@ for i in range(1, 21):
         second_surname='Surname',
         identification=123456789 + i,
         birth_date=date(1995 + (i % 5), (i % 12) + 1, (i % 28) + 1),
-        institutional_email=f'user{i}@example.com',
+        institutional_email=f'user{i}@tec.cr',
         phone_number=f'12345{i}',
         dl_expiration_date=date(2025 + (i % 5), (i % 12) + 1, (i % 28) + 1),
         gender_id=genders[i % len(genders)].id,

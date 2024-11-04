@@ -7,6 +7,7 @@ from app.schemas import *
 from app.models import*
 from app.schemas.user_schema import UserLogin, LoginResponse, UserUpdate
 from app.tec_db import validate_user_tec  # Importa la función para validar el usuario en la base de datos tec
+from app.interfaces import *
 
 user_router = APIRouter()
 
@@ -112,6 +113,7 @@ def get_vehicles_by_user(user_id: int, db: Session = Depends(get_db)):
     
     return formatted_vehicles
 
+"""
 # Login con email y contrasenna. esta leyendo la base que no es
 @user_router.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
 def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
@@ -124,6 +126,27 @@ def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
     
     # Retornar el mensaje y el correo del usuario
     return {"message": "Login successful", "user": prepare_user(user)}
+
+"""
+
+@user_router.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
+def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
+    try:
+        # Use the Factory to select the authentication provider
+        auth_provider = AuthFactory.get_auth_provider(user_login.email)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+    # Check if the user exists in the database
+    user = db.query(User).filter(User.institutional_email == user_login.email).first()
+    
+    # Verify credentials with the specific provider
+    if not user or not auth_provider.authenticate(user_login.email, user_login.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Return the message and user data if authentication was successful
+    return {"message": "Login successful", "user": prepare_user(user)}
+
 
 
 # Registrar un nuevo usuario
