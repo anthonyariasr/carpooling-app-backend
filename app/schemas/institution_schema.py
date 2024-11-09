@@ -3,14 +3,16 @@ from typing import Optional
 
 class InstitutionCreate(BaseModel):
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
     address: str
+    acronym: Optional[str] = None
 
 class InstitutionResponse(BaseModel):
     id: int
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
     address: str
+    acronym: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -18,4 +20,4 @@ class InstitutionResponse(BaseModel):
 class InstitutionBasicInfo(BaseModel):
     id: int
     name: str
-    acronym: str
+    acronym: Optional[str] = None

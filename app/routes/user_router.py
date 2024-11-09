@@ -150,7 +150,7 @@ def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
 
 
 # Registrar un nuevo usuario
-@user_router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@user_router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     user_exists = db.query(User).filter(User.institutional_email == user.institutional_email).first()
     if user_exists:
