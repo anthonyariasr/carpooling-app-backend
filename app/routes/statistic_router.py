@@ -95,37 +95,42 @@ def get_completed_trips_by_institution(institution_id: int, period: Optional[str
 #New users by institution last week~month~year 
 @statistic_router.get("/institution/{institution_id}/new-users", status_code=status.HTTP_200_OK)
 def get_new_users_by_institution(institution_id: int, db: Session = Depends(get_db)):
-    today = datetime.utcnow()
-    last_week_date = today - timedelta(weeks=1)
-    last_month_date = today - timedelta(days=30)
-    last_year_date = today - timedelta(days=365)
+    try:
+        today = datetime.utcnow()
+        last_week_date = today - timedelta(weeks=1)
+        last_month_date = today - timedelta(days=30)
+        last_year_date = today - timedelta(days=365)
 
-    # Counting new users in the last week
-    last_week_count = (
-        db.query(User)
-        .filter(User.institution_id == institution_id, User.date_registered >= last_week_date)
-        .count()
-    )
+        # Counting new users in the last week
+        last_week_count = (
+            db.query(User)
+            .filter(User.institution_id == institution_id, User.date_registered >= last_week_date)
+            .count()
+        )
 
-    # Count new users in the last month
-    last_month_count = (
-        db.query(User)
-        .filter(User.institution_id == institution_id, User.date_registered >= last_month_date)
-        .count()
-    )
+        # Count new users in the last month
+        last_month_count = (
+            db.query(User)
+            .filter(User.institution_id == institution_id, User.date_registered >= last_month_date)
+            .count()
+        )
 
-    # Count new users in the last year
-    last_year_count = (
-        db.query(User)
-        .filter(User.institution_id == institution_id, User.date_registered >= last_year_date)
-        .count()
-    )
+        # Count new users in the last year
+        last_year_count = (
+            db.query(User)
+            .filter(User.institution_id == institution_id, User.date_registered >= last_year_date)
+            .count()
+        )
 
-    return {
-        "last_week": last_week_count,
-        "last_month": last_month_count,
-        "last_year": last_year_count
-    }
+        return {
+            "last_week": last_week_count,
+            "last_month": last_month_count,
+            "last_year": last_year_count
+        }
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error fetching new users by institution")
 
 #Top passengers with the most trips by institution 1~3~5~10
 @statistic_router.get("/institution/{institution_id}/top-passengers", status_code=status.HTTP_200_OK)
@@ -257,7 +262,7 @@ def get_total_passengers(db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail="Error fetching total passengers")
 
-#Total drivers Falta HTTPException
+#Total drivers 
 def get_total_drivers(db: Session = Depends(get_db)):
     try:
         # Count distinct users who have been assigned as a driver in the Trip table

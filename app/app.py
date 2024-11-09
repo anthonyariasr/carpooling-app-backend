@@ -6,6 +6,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session, aliased
 from app.database import *
 from app.schemas import *
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import *
 # import app.routes import user_router
@@ -21,6 +23,25 @@ app.include_router(institution_router, prefix="/institutions")
 app.include_router(statistic_router, prefix="/statistics")
 
 
+# Configura los orígenes permitidos
+origins = [
+    "http://localhost:5173",  # URL del frontend en desarrollo (ajústalo según sea necesario)
+    "http://localhost:8000",
+    # Añade otros orígenes si es necesario
+]
+
+# Añade el middleware CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,                # Permitir solicitudes de estos orígenes
+    allow_credentials=True,                # Permitir el envío de credenciales (si es necesario)
+    allow_methods=["*"],                   # Permitir todos los métodos HTTP (GET, POST, etc.)
+    allow_headers=["*"],                   # Permitir todos los encabezados
+)
+
 @app.get("/")
 def is_running():
     return {"running": True}
+
+
+
