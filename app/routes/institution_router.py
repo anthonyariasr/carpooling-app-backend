@@ -16,7 +16,7 @@ def get_institution(institution_id: int, db: Session = Depends(get_db)):
     return institution
 
 # Obtener la lista de todas las instituciones
-@institution_router.get("/", response_model=List[InstitutionResponse])
+@institution_router.get("", response_model=List[InstitutionResponse])
 def get_all_institutions(db: Session = Depends(get_db)):
     institutions = db.query(Institution).all()
     return institutions
