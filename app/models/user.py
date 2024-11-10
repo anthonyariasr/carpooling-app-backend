@@ -18,7 +18,7 @@ class User(Base):
     phone_number = Column(String)
     dl_expiration_date = Column(Date)
     date_registered = Column(Date)
-    rating = Column(DECIMAL, CheckConstraint('rating >= 1.0 AND rating <= 5.0'))
+    rating = Column(DECIMAL, CheckConstraint('rating <= 5.0'))
     total_ratings = Column(Integer)
 
     gender_id = Column(ForeignKey('gender.id'))

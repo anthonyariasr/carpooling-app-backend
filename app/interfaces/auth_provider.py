@@ -7,6 +7,9 @@ class AuthProvider(ABC):
     @abstractmethod
     def authenticate(self, email: str, password: str) -> bool:
         pass
+    @abstractmethod
+    def check_existance(self, email: str) -> bool:
+        pass
 
 class TecAuthProvider(AuthProvider):
     def authenticate(self, email: str, password: str) -> bool:
