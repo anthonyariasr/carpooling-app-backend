@@ -1,6 +1,7 @@
 from typing import List
 from datetime import date
 from fastapi import Depends, APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.database import *
 from app.schemas import *
@@ -135,14 +136,14 @@ def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
         # Use the Factory to select the authentication provider
         auth_provider = AuthFactory.get_auth_provider(user_login.email)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(e)})
     
     # Check if the user exists in the database
     user = db.query(User).filter(User.institutional_email == user_login.email).first()
     
     # Verify credentials with the specific provider
     if not user or not auth_provider.authenticate(user_login.email, user_login.password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"detail": "Invalid credentials"})
     
     # Return the message and user data if authentication was successful
     return {"message": "Login successful", "user": prepare_user(user)}
@@ -152,22 +153,43 @@ def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
 # Registrar un nuevo usuario
 @user_router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    print(f"Registrando nuevo usuario: {user}")
+
     user_exists = db.query(User).filter(User.institutional_email == user.institutional_email).first()
+    
     if user_exists:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "Correo electrónico ya registrado"}
+        )
+    
     try:
+        print("Seleccionando el proveedor de autenticación...")
         # Use the Factory to select the authentication provider
         auth_provider = AuthFactory.get_auth_provider(user.institutional_email)
+        if not auth_provider.check_existance(user.institutional_email):
+            print(f"Error en la selección del proveedor") 
+            return JSONResponse(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    content={"detail": "Correo electrónico inválido"}
+                )
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    if not auth_provider.check_existance(user.institutional_email):
-        raise HTTPException(status_code=400, detail="Invalid email")
+        print("Error: El email no es válido según el proveedor de autenticación") 
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "Correo electrónico no peretenece a alguna institución registrada."}
+        )
     
+    print(f"Creando usuario: {user.dict()}")
     new_user = User(**user.dict())
+    print(f"RRRRRRRRRRRRRRRRRRegistrando nuevo usuario: {user}")
     db.add(new_user)
+    print(f"RegistrandoOOOOOOOOOOOOOOOOOOOOOOOOOO nuevo usuario: {user}")
     db.commit()
+    print(f"Registrando NNNNNNNNNNNNNNNNNNNNNNNNNnuevo usuario: {user}")
     db.refresh(new_user)
-    return new_user
+    print("Usuario registrado exitosamente")
+    return {"message": "Signup successful"}
 
 # Regisrar el expiration date del divers license
 @user_router.post("/{user_id}/license")
